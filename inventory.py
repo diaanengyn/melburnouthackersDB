@@ -1,5 +1,5 @@
 import sqlite3
-
+import os
 from flask import Blueprint
 from flask import jsonify, request
 
@@ -8,7 +8,9 @@ inventory = Blueprint('inventory', __name__,
 
 
 def get_db_connection():
-    conn = sqlite3.connect("/Users/dakshagrawal/PycharmProjects/flask-server/database.db")
+    PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+    DATABASE = os.path.join(PROJECT_ROOT, "database.db")
+    conn = sqlite3.connect(DATABASE)
     conn.row_factory = sqlite3.Row
     return conn
 
