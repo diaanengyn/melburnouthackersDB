@@ -36,7 +36,7 @@ def add_inventory():
                                                data['description'],
                                                data['price'],
                                                data['quantity'],
-                                               data['company_id'])
+                                               data['company_id']).get_sql()
     cursor = connection.cursor()
     cursor.execute(query)
     return jsonify({'message': 'Inventory created'})
