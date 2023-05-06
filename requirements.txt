@@ -1,3 +1,4 @@
 flask~=2.2.3
 Flask-SQLAlchemy
 flask-cors
+pypika

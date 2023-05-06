@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from flask import Blueprint
 from flask import jsonify, request
+from pypika import Query, Table, Field
 
 inventory = Blueprint('inventory', __name__,
                       template_folder='templates')
@@ -29,16 +30,13 @@ def get_tasks(company_id):
 def add_inventory():
     connection = get_db_connection()
     data = request.get_json()
-    query = f"""
-    INSERT INTO inventory(
-       {data['product_name']},
-                         {data['sku']},
-                         {data['description']},
-                        {data['price']},
-                         {data['quantity']},
-                         {data['company_id']}
-    )
-    """
+    inventory_table = Table('inventory')
+    query = Query.into(inventory_table).insert(data['product_name'],
+                                               data['sku'],
+                                               data['description'],
+                                               data['price'],
+                                               data['quantity'],
+                                               data['company_id'])
     cursor = connection.cursor()
     cursor.execute(query)
     return jsonify({'message': 'Inventory created'})
