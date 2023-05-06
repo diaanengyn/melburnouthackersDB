@@ -31,7 +31,8 @@ def add_inventory():
     connection = get_db_connection()
     data = request.get_json()
     inventory_table = Table('inventory')
-    query = Query.into(inventory_table).insert(data['product_name'],
+    query = Query.into(inventory_table).insert(None,
+                                               data['product_name'],
                                                data['sku'],
                                                data['description'],
                                                data['price'],
