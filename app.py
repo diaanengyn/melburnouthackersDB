@@ -1,6 +1,9 @@
 from flask import Flask
+from inventory import inventory
 
 app = Flask(__name__)
+app.app_context().push()
+app.register_blueprint(inventory)
 
 
 # Members API Route

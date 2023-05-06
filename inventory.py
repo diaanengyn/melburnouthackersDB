@@ -1,17 +1,61 @@
-from flask import Flask
 import sqlite3
-from __main__ import app
+import os
+from flask import Blueprint
+from flask import jsonify, request
 
-@app.route('/test', methods=['GET'])
-def test():
-    return 'it works!'
-
-
-# Members API Route
-@app.route("/members")
-def members():
-    return {"members": ["Member1", "Member2", "Member3"]}
+inventory = Blueprint('inventory', __name__,
+                      template_folder='templates')
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+def get_db_connection():
+    PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
+    DATABASE = os.path.join(PROJECT_ROOT, "database.db")
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+@inventory.route('/inventory/<int:company_id>', methods=['GET'])
+def get_tasks(company_id):
+    connection = get_db_connection()
+    cursor = connection.cursor()
+    query = f"SELECT * FROM inventory WHERE company_id={company_id}"
+    rows = cursor.execute(query).fetchall()
+    return jsonify({'inventory': rows})
+
+
+@inventory.route('/inventory/add', methods=['POST'])
+def add_inventory():
+    connection = get_db_connection()
+    data = request.get_json()
+    query = f"""
+    INSERT INTO inventory(
+        product_name={data['product_name']},
+                         sku={data['sku']},
+                         description={data['description']},
+                         price={data['price']},
+                         quantity={data['quantity']},
+                         company_id={data['company_id']}
+    )
+    """
+    cursor = connection.cursor()
+    cursor.execute(query)
+    return jsonify({'message': 'Inventory created'})
+
+
+@inventory.route('/inventory/update_quantity/<int:id>', methods=['PUT'])
+def update_quantity(id):
+    connection = get_db_connection()
+    data = request.get_json()
+    query = f"""
+        UPDATE inventory 
+        SET quantity = {data["quantity"]}
+        WHERE id = {id};
+        """
+    cursor = connection.cursor()
+    cursor.execute(query)
+    return jsonify({'message': 'Inventory updated'})
+
+
+if __name__ == '__main__':
+    inventory.run(debug=True)
