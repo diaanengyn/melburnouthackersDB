@@ -31,12 +31,12 @@ def add_inventory():
     data = request.get_json()
     query = f"""
     INSERT INTO inventory(
-        product_name={data['product_name']},
-                         sku={data['sku']},
-                         description={data['description']},
-                         price={data['price']},
-                         quantity={data['quantity']},
-                         company_id={data['company_id']}
+       {data['product_name']},
+                         {data['sku']},
+                         {data['description']},
+                        {data['price']},
+                         {data['quantity']},
+                         {data['company_id']}
     )
     """
     cursor = connection.cursor()

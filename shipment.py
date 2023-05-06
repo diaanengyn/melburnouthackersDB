@@ -40,11 +40,11 @@ def add_shipment():
     data = request.get_json()
     query = f"""
     INSERT INTO shipment(
-        shipment_name={data['shipment_name']},
-                         supplier_id={data['supplier_id']},
-                         customer_id={data['customer_id']},
-                         start_time={data['start_time']},
-                         status={data['status']}
+        {data['shipment_name']},
+                         {data['supplier_id']},
+                         {data['customer_id']},
+                         {data['start_time']},
+                         {data['status']}
     )
     """
     cursor = connection.cursor()

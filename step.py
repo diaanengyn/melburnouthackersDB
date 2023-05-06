@@ -31,11 +31,11 @@ def add_inventory():
     data = request.get_json()
     query = f"""
     INSERT INTO step(
-        shipment_id={data['shipment_id']},
-                         transporter_id={data['transporter_id']},
-                         start_time={data['start_time']},
-                         end_time={data['end_time']},
-                         status={data['status']}
+        {data['shipment_id']},
+                         {data['transporter_id']},
+                         {data['start_time']},
+                         {data['end_time']},
+                         {data['status']}
     )
     """
     cursor = connection.cursor()
