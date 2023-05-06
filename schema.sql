@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS inventory;
+DROP TABLE IF EXISTS shipment;
 
 CREATE TABLE IF NOT EXISTS inventory
 (
@@ -9,4 +10,14 @@ CREATE TABLE IF NOT EXISTS inventory
     quantity     INTEGER,
     price        INTEGER,
     company_id   INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS shipment
+(
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    shipment_name TEXT,
+    supplier_id   INTEGER,
+    customer_id   INTEGER,
+    start_time    TEXT,
+    status        TEXT
 );

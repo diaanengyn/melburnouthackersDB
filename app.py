@@ -1,9 +1,11 @@
 from flask import Flask
 from inventory import inventory
+from shipment import shipment
 
 app = Flask(__name__)
 app.app_context().push()
 app.register_blueprint(inventory)
+app.register_blueprint(shipment)
 
 
 # Members API Route
