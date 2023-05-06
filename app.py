@@ -1,10 +1,6 @@
 from flask import Flask
-import sqlite3
-from __main__ import app
 
-@app.route('/test', methods=['GET'])
-def test():
-    return 'it works!'
+app = Flask(__name__)
 
 
 # Members API Route
