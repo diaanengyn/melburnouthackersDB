@@ -1,7 +1,10 @@
 from flask import Flask
+from inventory import inventory
+import db
 
 app = Flask(__name__)
-
+app.app_context().push()
+app.register_blueprint(inventory)
 
 # Members API Route
 @app.route("/members")
