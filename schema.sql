@@ -21,3 +21,13 @@ CREATE TABLE IF NOT EXISTS shipment
     start_time    TEXT,
     status        TEXT
 );
+
+CREATE TABLE IF NOT EXISTS step
+(
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    shipment_id    INTEGER,
+    transporter_id INTEGER,
+    start_time     TEXT,
+    end_time       TEXT,
+    status         TEXT
+);
