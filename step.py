@@ -23,6 +23,7 @@ def get_steps(shipment_id):
     cursor = connection.cursor()
     query = f"SELECT * FROM step WHERE shipment_id={shipment_id}"
     rows = cursor.execute(query).fetchall()
+    rows = [dict(row) for row in rows]
     return jsonify({'inventory': rows})
 
 

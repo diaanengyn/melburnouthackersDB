@@ -32,6 +32,7 @@ def get_from_customer(company_id):
     cursor = connection.cursor()
     query = f"SELECT * FROM shipment WHERE customer_id={company_id}"
     rows = cursor.execute(query).fetchall()
+    rows = [dict(row) for row in rows]
     return jsonify({'shipments': rows})
 
 
