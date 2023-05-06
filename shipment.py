@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from flask import Blueprint
 from flask import jsonify, request
+from pypika import Query, Table, Field
 
 shipment = Blueprint('shipment', __name__,
                      template_folder='templates')
@@ -12,7 +13,7 @@ def get_db_connection():
     THIS_FOLDER = Path(__file__).parent.resolve()
     DATABASE = os.path.join(THIS_FOLDER, "database.db")
     conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    # conn.row_factory = sqlite3.Row
     return conn
 
 
@@ -38,17 +39,18 @@ def get_from_customer(company_id):
 def add_shipment():
     connection = get_db_connection()
     data = request.get_json()
-    query = f"""
-    INSERT INTO shipment(
-        {data['shipment_name']},
-                         {data['supplier_id']},
-                         {data['customer_id']},
-                         {data['start_time']},
-                         {data['status']}
-    )
-    """
+    inventory_table = Table('shipment')
+    query = Query.into(inventory_table).insert(None,
+                                               data['shipment_name'],
+                                               data['supplier_id'],
+                                               data['customer_id'],
+                                               data['start_time'],
+                                               data['status']).get_sql()
+
     cursor = connection.cursor()
     cursor.execute(query)
+    connection.commit()
+    connection.close()
     return jsonify({'message': 'Shipment created'})
 
 
@@ -63,4 +65,6 @@ def update_status(id):
         """
     cursor = connection.cursor()
     cursor.execute(query)
+    connection.commit()
+    connection.close()
     return jsonify({'message': 'Shipment updated'})

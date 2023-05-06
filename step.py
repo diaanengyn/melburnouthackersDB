@@ -2,6 +2,7 @@ import sqlite3
 import os
 from pathlib import Path
 from flask import Blueprint
+from pypika import Query, Table, Field
 from flask import jsonify, request
 
 step = Blueprint('step', __name__,
@@ -12,12 +13,12 @@ def get_db_connection():
     THIS_FOLDER = Path(__file__).parent.resolve()
     DATABASE = os.path.join(THIS_FOLDER, "database.db")
     conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    # conn.row_factory = sqlite3.Row
     return conn
 
 
 @step.route('/step/<int:shipment_id>', methods=['GET'])
-def get_tasks(shipment_id):
+def get_steps(shipment_id):
     connection = get_db_connection()
     cursor = connection.cursor()
     query = f"SELECT * FROM step WHERE shipment_id={shipment_id}"
@@ -29,17 +30,18 @@ def get_tasks(shipment_id):
 def add_inventory():
     connection = get_db_connection()
     data = request.get_json()
-    query = f"""
-    INSERT INTO step(
-        {data['shipment_id']},
-                         {data['transporter_id']},
-                         {data['start_time']},
-                         {data['end_time']},
-                         {data['status']}
-    )
-    """
+    inventory_table = Table('step')
+    query = Query.into(inventory_table).insert(None,
+                                               data['shipment_id'],
+                                               data['transporter_id'],
+                                               data['start_time'],
+                                               data['end_time'],
+                                               data['status']).get_sql()
+
     cursor = connection.cursor()
     cursor.execute(query)
+    connection.commit()
+    connection.close()
     return jsonify({'message': 'Inventory created'})
 
 
@@ -55,4 +57,6 @@ def update_status(id):
         """
     cursor = connection.cursor()
     cursor.execute(query)
+    connection.commit()
+    connection.close()
     return jsonify({'message': 'Inventory updated'})
