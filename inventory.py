@@ -1,17 +1,21 @@
-from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
-from flask import Blueprint, render_template, abort
-from flask import current_app
 import sqlite3
+
+from flask import Blueprint
+from flask import jsonify, request
 
 inventory = Blueprint('inventory', __name__,
                       template_folder='templates')
-connection = sqlite3.connect("/Users/dakshagrawal/PycharmProjects/flask-server/database.db")
+
+
+def get_db_connection():
+    conn = sqlite3.connect("/Users/dakshagrawal/PycharmProjects/flask-server/database.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 @inventory.route('/inventory/<int:company_id>', methods=['GET'])
 def get_tasks(company_id):
+    connection = get_db_connection()
     cursor = connection.cursor()
     query = f"SELECT * FROM inventory WHERE company_id={company_id}"
     rows = cursor.execute(query).fetchall()
@@ -20,6 +24,7 @@ def get_tasks(company_id):
 
 @inventory.route('/inventory/add', methods=['POST'])
 def add_inventory():
+    connection = get_db_connection()
     data = request.get_json()
     query = f"""
     INSERT INTO inventory(
@@ -38,6 +43,7 @@ def add_inventory():
 
 @inventory.route('/inventory/update_quantity/<int:id>', methods=['PUT'])
 def update_quantity(id):
+    connection = get_db_connection()
     data = request.get_json()
     query = f"""
         UPDATE inventory 
