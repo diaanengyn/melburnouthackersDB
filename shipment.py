@@ -13,7 +13,7 @@ def get_db_connection():
     THIS_FOLDER = Path(__file__).parent.resolve()
     DATABASE = os.path.join(THIS_FOLDER, "database.db")
     conn = sqlite3.connect(DATABASE)
-    # conn.row_factory = sqlite3.Row
+    conn.row_factory = sqlite3.Row
     return conn
 
 
@@ -23,6 +23,7 @@ def get_from_supplier(company_id):
     cursor = connection.cursor()
     query = f"SELECT * FROM shipment WHERE supplier_id={company_id}"
     rows = cursor.execute(query).fetchall()
+    rows = [dict(row) for row in rows]
     return jsonify({'shipments': rows})
 
 
