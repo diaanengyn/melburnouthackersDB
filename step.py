@@ -37,7 +37,9 @@ def add_inventory():
                                                data['transporter_id'],
                                                data['start_time'],
                                                data['end_time'],
-                                               data['status']).get_sql()
+                                               data['status'],
+                                               data['start_loc'],
+                                               data['end_loc']).get_sql()
 
     cursor = connection.cursor()
     cursor.execute(query)
