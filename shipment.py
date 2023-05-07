@@ -26,7 +26,7 @@ def get_from_supplier(company_id):
     return jsonify({'shipments': rows})
 
 
-@shipment.route('/shipment/supplier/<int:company_id>', methods=['GET'])
+@shipment.route('/shipment/customer/<int:company_id>', methods=['GET'])
 def get_from_customer(company_id):
     connection = get_db_connection()
     cursor = connection.cursor()

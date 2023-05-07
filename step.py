@@ -52,7 +52,7 @@ def update_status(id):
     data = request.get_json()
     query = f"""
         UPDATE step 
-        SET quantity = {data["quantity"]},
+        SET end_time = {data["end_time"]},
         status = {data['status']}
         WHERE id = {id};
         """
