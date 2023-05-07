@@ -32,4 +32,4 @@ def add_inventory():
     id = cursor.lastrowid
     connection.commit()
     connection.close()
-    return jsonify({'message': 'Company created', 'id': id})
+    return jsonify({'message': 'Company created yay', 'id': id})
